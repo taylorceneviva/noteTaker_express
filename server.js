@@ -14,6 +14,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 const fs = require("fs");
+var { v4: uuidv4 } = require("uuid");
 
 // HTML routes
 // app.get("/*", function(req, res) {
@@ -27,22 +28,32 @@ const fs = require("fs");
 
     // GET
     app.get(`/api/notes`, function (req, res) {
-        
-    
-    });
+      fs.readFile("db/db.json", "utf8", function(error,data) {
+        res.json(JSON.parse(data));
+      });
 
-    app.get(`/api/notes/:id`, function (req, res) {
-
-        
-
-    });
+  });
 
     // POST
     app.post(`/api/notes`, function (req, res) {
 
       var newNote = req.body;
 
+      newNote.id = uuidv4()
 
+      fs.readFile("./db/db.json", (err, data) => {
+        if (err) throw err;
+        var JSON = JSON.parse(data);
+      });
+      
+        JSON.push(newNote);
+
+        fs.writeFile("./db/db.json", json, (err) => {
+          if (err) throw err;
+          console.log("anything")
+      });
+
+      res.json(newNote);
     });
 
     //  DELETE
