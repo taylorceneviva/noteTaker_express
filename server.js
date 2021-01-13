@@ -6,7 +6,7 @@ var path = require("path");
 // Sets up the Express App
 // =============================================================
 var app = express();
-var PORT = 3000;
+let PORT = process.env.PORT || 3000;
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
@@ -41,25 +41,48 @@ var { v4: uuidv4 } = require("uuid");
 
       newNote.id = uuidv4()
 
-      fs.readFile("./db/db.json", (err, data) => {
+      fs.readFile("./db/db.json", "utf8", (err, data) => {
         if (err) throw err;
-        var JSON = JSON.parse(data);
-      });
-      
-        JSON.push(newNote);
+        console.log("db", data);
 
-        fs.writeFile("./db/db.json", json, (err) => {
+        var db = JSON.parse(data);
+  
+        db.push(newNote);
+
+        fs.writeFile("./db/db.json", JSON.stringify(db), (err) => {
           if (err) throw err;
-          console.log("anything")
+         
       });
 
       res.json(newNote);
     });
 
+  });
+
     //  DELETE
     app.delete(`/api/notes/:id`, function (req, res) {
-        res.send('Got a DELETE request at /user')
+      var removeId = req.params.id;
+      removeId.id = uuidv4()
+      var removeId = removeId.filter(function() {
+        if (removeId =! null )
+         return true
+        else {
+          return false
+        }
     });
+
+      fs.readFile("db/db.json", "utf8", function(err) {
+        var data = JSON.parse(data);
+      });
+
+           fs.writeFile("./db/db.json", JSON.stringify(data), (err) => {
+            if (err) throw err;
+           
+        });
+
+        res.end(console.log("working"))
+      });
+  
 
 
 
